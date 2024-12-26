@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { hash } from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 
 import { DatabaseService } from 'src/database/database.service';
 
@@ -17,7 +17,7 @@ export class UserService {
       if (existingUser) {
         throw new ConflictException('Email already exists');
       }
-      const hashPassword = await hash(body.password,8)
+      const hashPassword = await bcrypt.hash(body.password,8)
       // If not, create the user
       return this.databaseService.user.create({
         data: { ...body, password:hashPassword },
