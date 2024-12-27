@@ -11,7 +11,7 @@ export class AuthController {
   ) {}
 
   @Post()
-  async Register(@Body() body: LoginDTO):Promise<ApiResponse<any>> {
+  async Login(@Body() body: LoginDTO):Promise<ApiResponse<any>> {
      try {
        const result = await this.authService.signIn(body);
        return this.responseHandler.success(result, 'Login successful');

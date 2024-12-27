@@ -9,6 +9,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { JwtService } from '@nestjs/jwt';
 import { TokenService } from './token.service';
 import { validPassword } from 'src/common/utils/hash';
+import { UserPayload } from 'src/user/interfaces/users-login.interface.ts';
 
 @Injectable()
 export class AuthService {
@@ -22,16 +23,19 @@ export class AuthService {
         where: { email: body.email },
       });
       if (!user) {
-        throw new UnauthorizedException('User not exist');
+        throw new UnauthorizedException('User not found');
       }
-      const isPasswordValid = await validPassword(body.password, user.password);
-      if (!isPasswordValid) {
+      if (!(await validPassword(body.password, user.password))) {
         throw new UnauthorizedException('Invalid credentials');
       }
       const { password,updatedAt,createdAt, ...result } = user;
-      const { id, email } = user;
-      const pairToken = await this.tokenService.SignToken(id, email);
-      return { ...result, pairToken };
+      const payload: UserPayload = {
+        // create payload for JWT
+        sub: user.id,
+        email: user.email,
+      };
+      const jwt = await this.tokenService.SignToken(payload);
+      return { ...result, jwt };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

@@ -29,11 +29,8 @@ export class TokenService {
     });
   }
   async SignToken(
-    userId: number,
-    email: string,
+    payload:any
   ): Promise<{ access_Token: string; refresh_token: string }> {
-    const payload = { sub: userId, email };
-
     // Use the TokenService for generating the tokens
     const accessToken = await this.generateAccessToken(payload);
     const refreshToken = await this.generateRefreshToken(payload);

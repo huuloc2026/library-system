@@ -9,6 +9,7 @@ import {
   UsePipes,
   ValidationPipe,
   Query,
+  Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 
@@ -33,15 +34,35 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.userService.findOne(+id);
-  // }
+  @Patch()
+  UpdateUser(@Body() updateUser){
+    try {
+      return this.userService.updatebyId(updateUser.id, updateUser);
+    } catch (error) {
+      throw new ExceptionsHandler();
+    }
+  }
+  @Delete(':id')
+  DeleteUser(@Param('id') id:number){
+    try {
+      return this.userService.remove(Number(id))
+    } catch (error) {
+      throw new ExceptionsHandler();
+    }
+
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.userService.findOne(+id);
+  }
 
   @Get('pagination')
-  async pagination(@Query('skip') skip: number, @Query('limit') limit: number) {
+  async pagination(@Query() query:string, @Query('skip') skip: string, @Query('limit') limit: string) {
     try {
-      return this.userService.paginationQuery(skip, limit);
+      const skipInt = +skip
+      const limitInt = +limit
+      return this.userService.paginationQuery(skipInt, limitInt);
     } catch (error) {
       throw new ExceptionsHandler();
     }

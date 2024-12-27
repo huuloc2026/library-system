@@ -38,16 +38,10 @@ export class UserService {
       const results = await this.databaseService.user.findMany({
         skip: skip,
         take: take,
-        where: {
-          email: {
-            contains: 'Prisma',
-          },
-        },
+        where: {},
       });
-      console.log(results);
-  
-      const total = await this.databaseService.user.count(); 
 
+      const total = await this.databaseService.user.count();
       return {
         data: results,
         meta: {
@@ -57,8 +51,18 @@ export class UserService {
         },
       };
     } catch (error) {
-      console.log("Loi roi anh em oi");
+      
       throw new InternalServerErrorException('Failed to retrieve users');
+    }
+  }
+
+  async findbyEmail(email:string){
+    try {
+      return await this.databaseService.user.findUnique({
+        where:{email}
+      })
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to findbyEmail users');
     }
   }
 
@@ -71,7 +75,6 @@ export class UserService {
           email: true,
           firstName: true,
           lastName: true,
-          
         },
       });
     } catch (error) {
@@ -88,7 +91,7 @@ export class UserService {
           email: true,
           firstName: true,
           lastName: true,
-          role: true
+          role: true,
         },
       });
 
@@ -103,24 +106,23 @@ export class UserService {
   }
 
   // Update user by ID
-  async update(id: number, body: Prisma.UserUpdateInput) {
+  async updatebyId(id: number, body: any) {
     try {
-      const user = await this.databaseService.user.findUnique({
+      const user = await this.databaseService.user.findUniqueOrThrow({
         where: { id },
       });
-
       if (!user) {
         throw new NotFoundException(`User with ID ${id} not found`);
       }
-
       if (body.password) {
         body.password = await hashPasswordHelper(body.password as string, 8);
       }
-
-      return await this.databaseService.user.update({
-        where: { id },
-        data: body,
+      const result = await this.databaseService.user.update({
+        where: { id: id },
+        data: body ,
       });
+      delete result.password
+      return result;
     } catch (error) {
       throw new InternalServerErrorException('Failed to update user');
     }
@@ -132,15 +134,12 @@ export class UserService {
       const user = await this.databaseService.user.findUnique({
         where: { id },
       });
-
       if (!user) {
         throw new NotFoundException(`User with ID ${id} not found`);
       }
-
       await this.databaseService.user.delete({
         where: { id },
       });
-
       return { message: `User with ID ${id} successfully deleted` };
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete user');
