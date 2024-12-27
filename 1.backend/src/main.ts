@@ -8,7 +8,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({whitelist:true}))
   app.setGlobalPrefix('api');
   app.use(json({ limit: '50mb' }));
-  app.use(urlencoded({ extended: true, limit: '50mb' }));
+  app.use(urlencoded({ limit: '50mb', extended: true }));
   const configService = app.get(ConfigService)
   const PORT = configService.get('PORT');
   await app.listen(PORT ?? 8080);

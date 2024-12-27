@@ -17,30 +17,30 @@ export class AuthService {
     private databaseService: DatabaseService,
     private tokenService: TokenService,
   ) {}
-  async signIn(body:any): Promise<any> {
+  async signIn(user: any): Promise<any> {
     try {
-      const user = await this.databaseService.user.findUnique({
-        where: { email: body.email },
-      });
-      if (!user) {
-        throw new UnauthorizedException('User not found');
-      }
-      if (!(await validPassword(body.password, user.password))) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
-      const { password,updatedAt,createdAt, ...result } = user;
+      // create payload for JWT
       const payload: UserPayload = {
-        // create payload for JWT
         sub: user.id,
         email: user.email,
       };
       const jwt = await this.tokenService.SignToken(payload);
-      return { ...result, jwt };
+      return {user,jwt}
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
   }
+  async validateUser(email: string, pass: string): Promise<any> {
+    const user = await this.databaseService.user.findUnique({
+      where: { email },
+    });
 
+    if (user && await validPassword(pass,user.password)) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
   // async SignToken(
   //   userId: number,
   //   email: string,
@@ -51,7 +51,6 @@ export class AuthService {
   //   const accessToken = await this.tokenService.generateAccessToken(payload);
   //   const refreshToken = await this.tokenService.generateRefreshToken(payload);
 
-    
   //   return { access_Token: accessToken, refresh_token: refreshToken };
   // }
 }

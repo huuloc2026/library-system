@@ -11,15 +11,15 @@ enum JWT_SECRET {
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(configService: ConfigService, jwtSecret: JWT_SECRET) {
+  constructor(private readonly configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>(jwtSecret),
+      secretOrKey: configService.get<string>('JWT_SECRET_ACCESS'),
     });
   }
 
-  async validate(payload: any) {
+  async validate(payload: any) {  
     return { userId: payload.sub, email: payload.email };
   }
 }
