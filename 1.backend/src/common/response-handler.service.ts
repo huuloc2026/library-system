@@ -8,7 +8,7 @@ export interface ApiResponse<T> {
 
 @Injectable()
 export class ResponseHandlerService {
-  // Phản hồi thành công
+
   success<T>(data: T, message: string = 'Request successful'): ApiResponse<T> {
     return {
       success: true,
@@ -17,7 +17,6 @@ export class ResponseHandlerService {
     };
   }
 
-  // Phản hồi lỗi
   error<T>(message: string, data: T = null): ApiResponse<T> {
     return {
       success: false,
