@@ -1,15 +1,20 @@
-import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
-
 import { DatabaseService } from 'src/database/database.service';
+import { hashPasswordHelper } from 'src/common/utils/hash';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly databaseService: DatabaseService){}
+  constructor(private readonly databaseService: DatabaseService) {}
+
+  // Create a new user
   async create(body: Prisma.UserCreateInput) {
     try {
-
       const existingUser = await this.databaseService.user.findUnique({
         where: { email: body.email },
       });
@@ -17,24 +22,128 @@ export class UserService {
       if (existingUser) {
         throw new ConflictException('Email already exists');
       }
-      const hashPassword = await bcrypt.hash(body.password,8)
-      // If not, create the user
-      return this.databaseService.user.create({
-        data: { ...body, password:hashPassword },
+
+      const hashedPassword = await hashPasswordHelper(body.password, 8);
+
+      return await this.databaseService.user.create({
+        data: { ...body, password: hashedPassword },
       });
     } catch (error) {
-      
-        throw new InternalServerErrorException(error.message);
+      throw new InternalServerErrorException(error.message);
     }
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async paginationQuery(skip: number, take: number) {
+    try {
+      const results = await this.databaseService.user.findMany({
+        skip: skip,
+        take: take,
+        where: {
+          email: {
+            contains: 'Prisma',
+          },
+        },
+      });
+      console.log(results);
+  
+      const total = await this.databaseService.user.count(); 
+
+      return {
+        data: results,
+        meta: {
+          skip,
+          take,
+          total,
+        },
+      };
+    } catch (error) {
+      console.log("Loi roi anh em oi");
+      throw new InternalServerErrorException('Failed to retrieve users');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  // Find all users
+  async findAll() {
+    try {
+      return await this.databaseService.user.findMany({
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          
+        },
+      });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to retrieve users');
+    }
+  }
+  // Find one user by ID
+  async findOne(id: number) {
+    try {
+      const user = await this.databaseService.user.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          role: true
+        },
+      });
+
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to retrieve user');
+    }
   }
 
+  // Update user by ID
+  async update(id: number, body: Prisma.UserUpdateInput) {
+    try {
+      const user = await this.databaseService.user.findUnique({
+        where: { id },
+      });
 
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+
+      if (body.password) {
+        body.password = await hashPasswordHelper(body.password as string, 8);
+      }
+
+      return await this.databaseService.user.update({
+        where: { id },
+        data: body,
+      });
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to update user');
+    }
+  }
+
+  // Delete user by ID
+  async remove(id: number) {
+    try {
+      const user = await this.databaseService.user.findUnique({
+        where: { id },
+      });
+
+      if (!user) {
+        throw new NotFoundException(`User with ID ${id} not found`);
+      }
+
+      await this.databaseService.user.delete({
+        where: { id },
+      });
+
+      return { message: `User with ID ${id} successfully deleted` };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to delete user');
+    }
+  }
 }

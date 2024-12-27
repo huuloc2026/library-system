@@ -5,25 +5,39 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class TokenService {
   constructor(
-    private jwtService: JwtService, 
-    private config: ConfigService, 
+    private jwtService: JwtService,
+    private config: ConfigService,
   ) {}
 
   // Method to generate the access token
   async generateAccessToken(payload: object): Promise<string> {
-    const secret = this.config.get('JWT_SECRET');
+    const secret = this.config.get('JWT_SECRET_ACCESS');
+    const expiresTime = this.config.get('JWT_EXPIRES_ACCESS');
     return await this.jwtService.signAsync(payload, {
-      expiresIn: '15m',
+      expiresIn: expiresTime,
       secret,
     });
   }
 
   // Method to generate the refresh token
   async generateRefreshToken(payload: object): Promise<string> {
-    const secret = this.config.get('JWT_SECRET');
+    const secret = this.config.get('JWT_SECRET_REFRESH');
+    const expiresTime = this.config.get('JWT_EXPIRES_REFRESH');
     return await this.jwtService.signAsync(payload, {
-      expiresIn: '7d',
+      expiresIn: expiresTime,
       secret,
     });
+  }
+  async SignToken(
+    userId: number,
+    email: string,
+  ): Promise<{ access_Token: string; refresh_token: string }> {
+    const payload = { sub: userId, email };
+
+    // Use the TokenService for generating the tokens
+    const accessToken = await this.generateAccessToken(payload);
+    const refreshToken = await this.generateRefreshToken(payload);
+
+    return { access_Token: accessToken, refresh_token: refreshToken };
   }
 }

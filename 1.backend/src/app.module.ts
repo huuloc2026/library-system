@@ -6,12 +6,18 @@ import { UserModule } from './user/user.module';
 import { DatabaseModule } from './database/database.module';
 import { DatabaseService } from './database/database.service';
 import { ConfigModule } from '@nestjs/config';
+import { ResponseHandlerModule } from './common/response-handler.module';
 
 @Module({
-  imports: [AuthModule, UserModule, DatabaseModule, 
+  imports: [
+    AuthModule,
+    UserModule,
+    DatabaseModule,
     ConfigModule.forRoot({
-      isGlobal: true, 
-    })],
+      isGlobal: true,
+    }),
+    ResponseHandlerModule,
+  ],
   controllers: [],
   providers: [DatabaseService],
 })
