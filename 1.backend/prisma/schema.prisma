@@ -16,6 +16,8 @@ model User {
   password  String
   role      Role     @default(USER) // Default role is 'USER'
   isActive  Boolean  @default(false)
+  CodeId    String
+  CodeExpired DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

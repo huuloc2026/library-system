@@ -8,6 +8,7 @@ import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { hashPasswordHelper } from 'src/common/utils/hash';
 import { RegisterNewuserDTO } from 'src/auth/dto/CreateUserDto';
+import { faker } from '@faker-js/faker/.';
 
 @Injectable()
 export class UserService {
@@ -159,7 +160,7 @@ export class UserService {
     const hashedPassword = await hashPasswordHelper(body.password, 8);
     // step 3: send email
     return await this.databaseService.user.create({
-      data: { ...body, password: hashedPassword },
+      data: { ...body,CodeId: faker.string.uuid(),CodeExpired: new Date(),password: hashedPassword },
     });
   }
 }

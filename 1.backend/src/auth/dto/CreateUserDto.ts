@@ -17,4 +17,7 @@ export class RegisterNewuserDTO {
   lastName: string;
   @IsOptional()
   phone: string;
+
+  @IsOptional()
+  codeId: string
 }
