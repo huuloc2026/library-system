@@ -7,10 +7,15 @@ import { TokenService } from './token.service';
 import { LocalStrategy } from './passport/local.stategy';
 import { JwtStrategy } from './jwt.strategy';
 import { UserModule } from 'src/user/user.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 
 @Module({
-  imports: [UserModule, JwtModule.register({}), PassportModule],
+  imports: [
+    UserModule,
+    JwtModule,
+    PassportModule,
+  ],
   controllers: [AuthController],
   providers: [AuthService, TokenService, LocalStrategy, JwtStrategy],
   exports: [JwtStrategy],

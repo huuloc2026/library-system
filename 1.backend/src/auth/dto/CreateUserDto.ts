@@ -18,6 +18,4 @@ export class RegisterNewuserDTO {
   @IsOptional()
   phone: string;
 
-  @IsOptional()
-  codeId: string
 }

@@ -5,10 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { Strategy } from 'passport-local';
 
 
-enum JWT_SECRET {
-  ACCESS = 'JWT_SECRET_ACCESS',
-  REFRESH = 'JWT_SECRET_REFRESH',
-}
+
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
