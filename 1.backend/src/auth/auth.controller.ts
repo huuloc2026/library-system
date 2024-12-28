@@ -10,7 +10,6 @@ import {
   Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDTO } from './dto/LoginDto';
 import {
   ApiResponse,
   ResponseHandlerService,
@@ -19,11 +18,14 @@ import { LocalAuthGuard } from './passport/local-auth.guard';
 import { JwtAuthGuard } from './passport/jwt-auth.guard';
 import { Public } from './decoraters/public-decorator';
 import { RegisterNewuserDTO } from './dto/CreateUserDto';
+import { MailService } from 'src/mail/mail.service';
+
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
+    private emailsent: MailService,
     private responseHandler: ResponseHandlerService,
   ) {}
 
@@ -38,7 +40,7 @@ export class AuthController {
 
   @Post('register')
   @Public()
-  async Register(@Body() registerUser: RegisterNewuserDTO ) {
+  async Register(@Body() registerUser: RegisterNewuserDTO) {
     const result = await this.authService.Register(registerUser);
     return this.responseHandler.success(result, 'Register successful');
   }
@@ -48,5 +50,13 @@ export class AuthController {
   getProtectedData(@Request() req) {
     const user = req.user;
     return user;
+  }
+
+  @Get('mail')
+  @Public()
+  async TestEmail() {
+    console.log('Mail route accessed');
+    //const test = await this.emailsent.sendUserConfirmation("huuloc2026@gmail.com",'123456');
+    return "hello";
   }
 }

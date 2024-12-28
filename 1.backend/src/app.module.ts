@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ResponseHandlerModule } from './common/response-handler.module';
 import { JwtAuthGuard } from './auth/passport/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { APP_GUARD } from '@nestjs/core';
       isGlobal: true,
     }),
     ResponseHandlerModule,
+    MailModule,
   ],
   controllers: [],
   providers: [

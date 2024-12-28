@@ -8,10 +8,12 @@ import { LocalStrategy } from './passport/local.stategy';
 import { JwtStrategy } from './jwt.strategy';
 import { UserModule } from 'src/user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailModule } from 'src/mail/mail.module';
 
 
 @Module({
   imports: [
+    MailModule,
     UserModule,
     JwtModule,
     PassportModule,

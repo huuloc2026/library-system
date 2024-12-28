@@ -161,7 +161,7 @@ export class UserService {
     const hashedPassword = await hashPasswordHelper(body.password, 8);
     // step 3: send email
     return await this.databaseService.user.create({
-      data: { ...body,CodeId: faker.string.uuid(),CodeExpired: dayjs().add(1,'minute').toDate(),password: hashedPassword },
+      data: { ...body,CodeId: faker.string.uuid(),CodeExpired: dayjs().add(1,'minutes').toDate(),password: hashedPassword },
     });
   }
 }
