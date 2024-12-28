@@ -12,6 +12,7 @@ import { validPassword } from 'src/common/utils/hash';
 import { UserPayload } from 'src/user/interfaces/users-login.interface.ts';
 import { UserService } from 'src/user/user.service';
 import { RegisterNewuserDTO } from './dto/CreateUserDto';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {

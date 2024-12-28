@@ -10,10 +10,14 @@ import { hashPasswordHelper } from 'src/common/utils/hash';
 import { RegisterNewuserDTO } from 'src/auth/dto/CreateUserDto';
 import { faker } from '@faker-js/faker';
 import * as dayjs from 'dayjs';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private emailsent: MailService,
+  ) {}
 
   // Create a new user
   async create(body: Prisma.UserCreateInput) {
@@ -153,15 +157,25 @@ export class UserService {
     const existingUser = await this.databaseService.user.findUnique({
       where: { email: body.email },
     });
-    
+
     if (existingUser) {
       throw new ConflictException('Email already exists');
     }
     //hash password
     const hashedPassword = await hashPasswordHelper(body.password, 8);
     // step 3: send email
-    return await this.databaseService.user.create({
-      data: { ...body,CodeId: faker.string.uuid(),CodeExpired: dayjs().add(1,'minutes').toDate(),password: hashedPassword },
+    const user = await this.databaseService.user.create({
+      data: {
+        ...body,
+        CodeId: faker.string.uuid(),
+        CodeExpired: dayjs().add(1, 'minutes').toDate(),
+        password: hashedPassword,
+      },
     });
+    const sentEmail = await this.emailsent.sendUserConfirmation(
+      user.email,
+      user.CodeId,
+    );
+    return sentEmail
   }
 }
