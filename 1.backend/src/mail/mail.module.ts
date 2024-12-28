@@ -2,14 +2,15 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { Module } from '@nestjs/common';
 import { MailService } from './mail.service';
-import { join } from 'path';
+
 import { AuthController } from 'src/auth/auth.controller';
-import { AuthService } from 'src/auth/auth.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TokenService } from 'src/auth/token.service';
+
+import { ConfigService } from '@nestjs/config';
+
 import { AuthModule } from 'src/auth/auth.module';
-import { UserService } from 'src/user/user.service';
+
 import { UserModule } from 'src/user/user.module';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -28,6 +29,13 @@ import { UserModule } from 'src/user/user.module';
         },
         defaults: {
           from: '"nest-modules" <no-reply@nestjs.com>',
+        },
+        template: {
+          dir: join(__dirname),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
         },
       }),
       inject: [ConfigService],

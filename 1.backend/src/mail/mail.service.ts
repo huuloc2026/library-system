@@ -8,16 +8,16 @@ import { Injectable } from '@nestjs/common';
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendUserConfirmation(user: any, token: string) {
+  async sendUserConfirmation(EmailofUser: any, token: string) {
     const url = `example.com/auth/confirm?token=${token}`;
 
     await this.mailerService.sendMail({
-      to: user.email,
+      to: EmailofUser,
       subject: 'Welcome to Nice App! Confirm your Email',
-      template: './confirm', // `.hbs` extension is appended automatically
+      template: './template/confirm.hbs', 
       context: {
         // ✏️ filling curly brackets with content
-        name: user.name,
+        name: EmailofUser,
         url,
       },
     });
