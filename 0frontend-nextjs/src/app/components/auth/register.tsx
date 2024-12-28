@@ -2,7 +2,7 @@
 
 import React from "react";
 import type { FormProps } from "antd";
-import { Button, Checkbox, Form, Input } from "antd";
+import { Button, Form, Input } from "antd";
 
 const Register = () => {
   type FieldType = {
@@ -24,62 +24,104 @@ const Register = () => {
   };
 
   return (
-    <Form
-      name="basic"
-      labelCol={{ span: 10 }}
-      wrapperCol={{ span: 16 }}
-      style={{ maxWidth: 600 }}
-    //   initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-    >
-      <Form.Item<FieldType>
-        label="Email"
-        name="email"
-        rules={[{ required: true, message: "Please input your username!" }]}
-      >
-        <Input />
-      </Form.Item>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 shadow-md rounded-lg w-full max-w-lg">
+        <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
+        <Form
+          name="basic"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+          layout="vertical"
+        >
+          {/* Email */}
+          <Form.Item<FieldType>
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: "Please input your email!" },
+              { type: "email", message: "Please enter a valid email!" },
+            ]}
+          >
+            <Input className="p-2 border border-gray-300 rounded-md" />
+          </Form.Item>
 
-      <Form.Item<FieldType>
-        label="First Name"
-        name="firstName"
-        rules={[{ required: false, message: "Please input your username!" }]}
-      >
-        <Input />
-      </Form.Item>
+          {/* First Name */}
+          <Form.Item<FieldType>
+            label="First Name"
+            name="firstName"
+            rules={[{ required: false }]}
+          >
+            <Input className="p-2 border border-gray-300 rounded-md" />
+          </Form.Item>
 
-      <Form.Item<FieldType>
-        label="Last Name"
-        name="lastName"
-        rules={[{ required: false, message: "Please input your username!" }]}
-      >
-        <Input />
-      </Form.Item>
+          {/* Last Name */}
+          <Form.Item<FieldType>
+            label="Last Name"
+            name="lastName"
+            rules={[{ required: false }]}
+          >
+            <Input className="p-2 border border-gray-300 rounded-md" />
+          </Form.Item>
 
-      <Form.Item<FieldType>
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: "Please input your password!" }]}
-      >
-        <Input.Password />
-      </Form.Item>
+          {/* Password */}
+          <Form.Item<FieldType>
+            label="Password"
+            name="password"
+            rules={[
+              { required: true, message: "Please input your password!" },
+              { min: 6, message: "Password must be at least 6 characters!" },
+            ]}
+          >
+            <Input.Password className="p-2 border border-gray-300 rounded-md" />
+          </Form.Item>
 
-      <Form.Item<FieldType>
-        label="Phone Number"
-        name="phoneNumber"
-        rules={[{ required: true, message: "Please input your username!" }]}
-      >
-        <Input />
-      </Form.Item>
+          {/* Phone Number */}
+          <Form.Item<FieldType>
+            label="Phone Number"
+            name="phoneNumber"
+            rules={[
+              { required: true, message: "Please input your phone number!" },
+              {
+                pattern: /^[0-9]+$/,
+                message: "Phone number must contain only digits!",
+              },
+            ]}
+          >
+            <Input className="p-2 border border-gray-300 rounded-md" />
+          </Form.Item>
 
-      <Form.Item label={null}>
-        <Button type="primary" htmlType="submit">
-          Submit 
-        </Button>
-      </Form.Item>
-    </Form>
+          {/* Submit Button */}
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-md"
+            >
+              Register
+            </Button>
+          </Form.Item>
+        </Form>
+
+        {/* "Forgot Password" and "Have an Account?" */}
+        <div className="mt-4 text-center">
+          <p className="text-sm text-gray-600">
+            Already have an account?{" "}
+            <a href="/auth/login" className="text-blue-500 hover:underline">
+              Login here
+            </a>
+          </p>
+          <p className="text-sm text-gray-600 mt-2">
+            <a
+              href="/auth/forgot-password"
+              className="text-blue-500 hover:underline"
+            >
+              Forgot Password?
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

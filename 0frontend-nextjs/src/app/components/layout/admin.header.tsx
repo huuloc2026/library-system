@@ -1,18 +1,15 @@
-'use client'
+"use client";
 
-
-import { Button, Layout, theme } from 'antd'
+import { Button, Layout } from "antd";
 
 const AdminHeader = () => {
-
-    const {Header} = Layout
+  const { Header } = Layout;
 
   return (
-    <Header style={{ margin: "24px 16px",
-            padding: 24, background: "#ccc" }}>
-      This is Header
+    <Header className="m-6 p-6 bg-gray-500 rounded-md shadow-md text-center font-serif">
+      <div className=" text-white text-2xl justify-between p-4"> Welcome to my Dashboard ! Have a good day</div>
     </Header>
   );
-}
+};
 
-export default AdminHeader
+export default AdminHeader;

@@ -4,9 +4,9 @@ import Login from '@/app/components/auth/login'
 
 const LoginPage = () => {
   return (
-    <div>
+    <>
       <Login></Login>
-    </div>
+    </>
   )
 }
 
