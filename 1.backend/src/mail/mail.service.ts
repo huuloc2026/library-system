@@ -2,23 +2,26 @@
 
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { join } from 'path';
 
 
 @Injectable()
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendUserConfirmation(EmailofUser: any, token: string) {
-    const url = `example.com/auth/confirm?token=${token}`;
+  async sendUserConfirmation(EmailofUser: any, codeId: string) {
+    const url = `example.com/auth/confirm?token=${codeId}`;
 
     await this.mailerService.sendMail({
       to: EmailofUser,
-      subject: 'Welcome to Nice App! Confirm your Email',
-      template: './template/confirm.hbs', 
+      subject: 'Welcome to Nice Jake Library! Confirm your Email',
+      template: './confirmation.hbs',
       context: {
         // ✏️ filling curly brackets with content
         name: EmailofUser,
-        url,
+        confirmationCode: codeId,
+        confirmationLink: url,
+        appName: 'Jake Library',
       },
     });
   }

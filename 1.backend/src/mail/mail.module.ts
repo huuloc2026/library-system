@@ -31,7 +31,7 @@ import { join } from 'path';
           from: '"nest-modules" <no-reply@nestjs.com>',
         },
         template: {
-          dir: join(__dirname),
+          dir: process.cwd()+ '/src/mail/template',
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
@@ -45,4 +45,6 @@ import { join } from 'path';
   providers: [MailService],
   exports: [MailService],
 })
-export class MailModule {}
+export class MailModule {
+  
+}

@@ -56,7 +56,10 @@ export class AuthController {
   @Public()
   async TestEmail() {
     console.log('Mail route accessed');
-    const result = await this.emailsent.sendUserConfirmation("huuloc2026@gmail.com","123")
-    return result;
+    const result = await this.emailsent.sendUserConfirmation(
+      'huuloc2026@gmail.com',
+      '202002',
+    );
+    return `oke`;
   }
 }
