@@ -9,17 +9,19 @@ import { JwtStrategy } from './jwt.strategy';
 import { UserModule } from 'src/user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailModule } from 'src/mail/mail.module';
+import { MailService } from 'src/mail/mail.service';
 
 
 @Module({
-  imports: [
-    MailModule,
-    UserModule,
-    JwtModule,
-    PassportModule,
-  ],
+  imports: [UserModule, JwtModule, PassportModule],
   controllers: [AuthController],
-  providers: [AuthService, TokenService, LocalStrategy, JwtStrategy],
-  exports: [JwtStrategy],
+  providers: [
+    AuthService,
+    TokenService,
+    LocalStrategy,
+    JwtStrategy,
+    MailService,
+  ],
+  exports: [JwtStrategy, TokenService, AuthService],
 })
 export class AuthModule {}

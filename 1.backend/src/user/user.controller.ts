@@ -24,7 +24,7 @@ export class UserController {
 
   @Public()
   @Post()
-  create(@Body() body: CreateUserDto) {
+  create(@Body() body: any) {
     try {
       return this.userService.create(body);
     } catch (error) {

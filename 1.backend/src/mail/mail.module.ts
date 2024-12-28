@@ -6,9 +6,15 @@ import { join } from 'path';
 import { AuthController } from 'src/auth/auth.controller';
 import { AuthService } from 'src/auth/auth.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TokenService } from 'src/auth/token.service';
+import { AuthModule } from 'src/auth/auth.module';
+import { UserService } from 'src/user/user.service';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
+    AuthModule,
+    UserModule,
     MailerModule.forRootAsync({
       useFactory: async (configservice: ConfigService) => ({
         transport: {
@@ -23,18 +29,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         defaults: {
           from: '"nest-modules" <no-reply@nestjs.com>',
         },
-        // template: {
-        //   dir: __dirname + '/templates',
-        //   adapter: new PugAdapter(),
-        //   options: {
-        //     strict: true,
-        //   },
-        // },
       }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AuthController],
-  providers: [MailService, AuthService],
+  providers: [MailService],
   exports: [MailService],
 })
 export class MailModule {}

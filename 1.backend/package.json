@@ -13,7 +13,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "cldb": "npx prisma migrate reset --force",
-    "start:dev": "nest start --watch ",
+    "start:dev": "nest start --watch",
     "dev": "yarn run cldb && yarn run start:dev",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

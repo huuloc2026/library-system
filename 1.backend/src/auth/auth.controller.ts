@@ -52,11 +52,10 @@ export class AuthController {
     return user;
   }
 
-  @Get('mail')
+  @Get('test')
   @Public()
   async TestEmail() {
     console.log('Mail route accessed');
-    //const test = await this.emailsent.sendUserConfirmation("huuloc2026@gmail.com",'123456');
-    return "hello";
+    return 'hello';
   }
 }

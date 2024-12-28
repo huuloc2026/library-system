@@ -1,3 +1,5 @@
+
+
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 
@@ -11,7 +13,6 @@ export class MailService {
 
     await this.mailerService.sendMail({
       to: user.email,
-      // from: '"Support Team" <support@example.com>', // override default from
       subject: 'Welcome to Nice App! Confirm your Email',
       template: './confirm', // `.hbs` extension is appended automatically
       context: {

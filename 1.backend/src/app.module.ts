@@ -13,13 +13,13 @@ import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-    AuthModule,
-    UserModule,
-    DatabaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     ResponseHandlerModule,
+    AuthModule,
+    UserModule,
+    DatabaseModule,
     MailModule,
   ],
   controllers: [],
