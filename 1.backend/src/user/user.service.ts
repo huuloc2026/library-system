@@ -7,6 +7,7 @@ import {
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import { hashPasswordHelper } from 'src/common/utils/hash';
+import { RegisterNewuserDTO } from 'src/auth/dto/CreateUserDto';
 
 @Injectable()
 export class UserService {
@@ -51,16 +52,15 @@ export class UserService {
         },
       };
     } catch (error) {
-      
       throw new InternalServerErrorException('Failed to retrieve users');
     }
   }
 
-  async findbyEmail(email:string){
+  async findbyEmail(email: string) {
     try {
       return await this.databaseService.user.findUnique({
-        where:{email}
-      })
+        where: { email },
+      });
     } catch (error) {
       throw new InternalServerErrorException('Failed to findbyEmail users');
     }
@@ -119,9 +119,9 @@ export class UserService {
       }
       const result = await this.databaseService.user.update({
         where: { id: id },
-        data: body ,
+        data: body,
       });
-      delete result.password
+      delete result.password;
       return result;
     } catch (error) {
       throw new InternalServerErrorException('Failed to update user');
@@ -144,5 +144,22 @@ export class UserService {
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete user');
     }
+  }
+
+  // Register new
+  async register(body: RegisterNewuserDTO) {
+    const existingUser = await this.databaseService.user.findUnique({
+      where: { email: body.email },
+    });
+    
+    if (existingUser) {
+      throw new ConflictException('Email already exists');
+    }
+    //hash password
+    const hashedPassword = await hashPasswordHelper(body.password, 8);
+    // step 3: send email
+    return await this.databaseService.user.create({
+      data: { ...body, password: hashedPassword },
+    });
   }
 }

@@ -28,13 +28,17 @@ const generateBook = (numUsers = 50) => {
   return Array(numUsers).fill(null).map(createBook);
 };
 
-async function main() {
-  console.clear()
-  await prisma.borrowing.deleteMany(); // Ensure to clear dependent models first
+async function clearAllWarning(){
+  await prisma.borrowing.deleteMany();
   await prisma.notification.deleteMany();
   await prisma.book.deleteMany();
   await prisma.employee.deleteMany();
-  await prisma.user.deleteMany()
+  await prisma.user.deleteMany();
+}
+
+async function main() {
+  console.clear()
+  clearAllWarning()
   await prisma.$executeRaw`TRUNCATE TABLE "User" CASCADE`;
   console.log('Data cleared and ready for seeding!');
   // Seed books

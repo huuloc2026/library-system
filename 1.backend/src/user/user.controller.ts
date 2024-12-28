@@ -15,11 +15,14 @@ import { UserService } from './user.service';
 
 import { CreateUserDto } from './dto/User.dto';
 import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
+import { Public } from 'src/auth/decoraters/public-decorator';
+
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Public()
   @Post()
   create(@Body() body: CreateUserDto) {
     try {
@@ -29,13 +32,14 @@ export class UserController {
     }
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.userService.findAll();
   }
 
   @Patch()
-  UpdateUser(@Body() updateUser){
+  UpdateUser(@Body() updateUser) {
     try {
       return this.userService.updatebyId(updateUser.id, updateUser);
     } catch (error) {
@@ -43,13 +47,12 @@ export class UserController {
     }
   }
   @Delete(':id')
-  DeleteUser(@Param('id') id:number){
+  DeleteUser(@Param('id') id: number) {
     try {
-      return this.userService.remove(Number(id))
+      return this.userService.remove(Number(id));
     } catch (error) {
       throw new ExceptionsHandler();
     }
-
   }
 
   @Get(':id')
@@ -58,10 +61,14 @@ export class UserController {
   }
 
   @Get('pagination')
-  async pagination(@Query() query:string, @Query('skip') skip: string, @Query('limit') limit: string) {
+  async pagination(
+    @Query() query: string,
+    @Query('skip') skip: string,
+    @Query('limit') limit: string,
+  ) {
     try {
-      const skipInt = +skip
-      const limitInt = +limit
+      const skipInt = +skip;
+      const limitInt = +limit;
       return this.userService.paginationQuery(skipInt, limitInt);
     } catch (error) {
       throw new ExceptionsHandler();

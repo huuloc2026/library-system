@@ -10,12 +10,15 @@ import { JwtService } from '@nestjs/jwt';
 import { TokenService } from './token.service';
 import { validPassword } from 'src/common/utils/hash';
 import { UserPayload } from 'src/user/interfaces/users-login.interface.ts';
+import { UserService } from 'src/user/user.service';
+import { RegisterNewuserDTO } from './dto/CreateUserDto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private databaseService: DatabaseService,
     private tokenService: TokenService,
+    private userService: UserService,
   ) {}
   async signIn(user: any): Promise<any> {
     try {
@@ -25,7 +28,7 @@ export class AuthService {
         email: user.email,
       };
       const jwt = await this.tokenService.SignToken(payload);
-      return {user,jwt}
+      return { user, jwt };
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -35,12 +38,17 @@ export class AuthService {
       where: { email },
     });
 
-    if (user && await validPassword(pass,user.password)) {
+    if (user && (await validPassword(pass, user.password))) {
       const { password, ...result } = user;
       return result;
     }
     return null;
   }
+
+  async Register(user: RegisterNewuserDTO): Promise<any> {
+    return await this.userService.register(user);
+  }
+
   // async SignToken(
   //   userId: number,
   //   email: string,
