@@ -1,8 +1,12 @@
-import React from 'react'
+'use client'
+
+import Login from '@/app/components/auth/login'
 
 const LoginPage = () => {
   return (
-    <div>LoginPage</div>
+    <div>
+      <Login></Login>
+    </div>
   )
 }
 

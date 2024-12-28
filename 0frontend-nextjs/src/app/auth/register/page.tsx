@@ -1,8 +1,9 @@
+import Register from '@/app/components/auth/register'
 import React from 'react'
 
 const RegisterPage = () => {
   return (
-    <div>RegisterPage</div>
+    <><Register/></>
   )
 }
 
