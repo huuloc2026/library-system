@@ -33,9 +33,13 @@ export class AuthController {
   @Post('login')
   @Public()
   async Login(@Request() req) {
-    const user = req.user;
-    const result = await this.authService.signIn(user);
-    return this.responseHandler.success(result, 'Login successful');
+    try {
+      const user = req.user;
+      const result = await this.authService.signIn(user);
+      return this.responseHandler.success(result, 'Login successful');
+    } catch (error) {
+      return this.responseHandler.error(error.message,null)
+    }
   }
 
   @Post('register')

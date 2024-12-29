@@ -13,6 +13,7 @@ import { UserPayload } from 'src/user/interfaces/users-login.interface.ts';
 import { UserService } from 'src/user/user.service';
 import { RegisterNewuserDTO } from './dto/CreateUserDto';
 import { MailService } from 'src/mail/mail.service';
+import { ValidationError } from 'class-validator';
 
 @Injectable()
 export class AuthService {
@@ -43,7 +44,7 @@ export class AuthService {
       const { password, ...result } = user;
       return result;
     }
-    return null;
+    return null
   }
 
   async Register(user: RegisterNewuserDTO): Promise<any> {

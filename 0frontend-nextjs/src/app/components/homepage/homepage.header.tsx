@@ -8,17 +8,11 @@ import {
   UserAddOutlined,
   AliwangwangOutlined,
 } from "@ant-design/icons";
-import LoginModal from "./LoginModal";
-import RegisterModal from "./RegisterModal";
-
-
+import Link from "next/link";
 
 const { Search } = Input;
 
 export default function Header() {
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-
   return (
     <header className="bg-blue-600 p-4 shadow-md">
       <div className="container mx-auto flex flex-col sm:flex-row items-center justify-between">
@@ -34,34 +28,28 @@ export default function Header() {
             onSearch={(value) => console.log(value)}
           />
           <div className="flex space-x-2">
-            <Button
-              type="primary"
-              icon={<LoginOutlined />}
-              size="large"
-              className="bg-white text-blue-600 hover:bg-blue-50 border-white"
-              onClick={() => setIsLoginModalOpen(true)}
-            >
-              Login
-            </Button>
-            <Button
-              icon={<UserAddOutlined />}
-              size="large"
-              className="bg-blue-500 text-white hover:bg-blue-400 border-blue-500"
-              onClick={() => setIsRegisterModalOpen(true)}
-            >
-              Register
-            </Button>
+            <Link href="/auth/login" passHref>
+              <Button
+                type="primary"
+                icon={<LoginOutlined />}
+                size="large"
+                className="bg-white text-blue-600 hover:bg-blue-50 border-white"
+              >
+                Login
+              </Button>
+            </Link>
+            <Link href="/auth/register" passHref>
+              <Button
+                icon={<UserAddOutlined />}
+                size="large"
+                className="bg-blue-500 text-white hover:bg-blue-400 border-blue-500"
+              >
+                Register
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-      />
-      <RegisterModal
-        isOpen={isRegisterModalOpen}
-        onClose={() => setIsRegisterModalOpen(false)}
-      />
     </header>
   );
 }
