@@ -37,15 +37,3 @@ export const verify = (password, hash) => {
   });
 };
 
-
-
-// hash('123')
-//   .then(hashedPassword => {
-//     const test = hashedPassword;
-//     return verify('123', test).then((test) => {
-//       console.log(test);
-//     });
-//   })
-//   .catch((error) => {
-//     console.error('Error hashing password:', error);
-//   });
